@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DUEL BY VACULIK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d17;--panel:#141828;--line:#262c45;--ink:#f3f1ea;--mute:#8d93ad;--gold:#f5c542;--ok:#3ddc84;--bad:#ff5a5f;--blue:#4d7cff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;min-height:100%}
+body{display:flex;justify-content:center;padding:24px 16px 48px}
+.wrap{width:100%;max-width:560px}
+header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:22px}
+.logo{font-family:Archivo,sans-serif;font-weight:900;font-size:30px;letter-spacing:.02em}
+.logo span{display:block;font-size:10px;font-weight:700;letter-spacing:.42em;color:var(--gold);margin-top:2px}
+.date{font-size:13px;color:var(--mute)}
+.bank{font-family:Archivo;font-weight:900;font-size:22px;color:var(--gold);text-align:right}
+.bank small{display:block;font-family:Inter;font-weight:500;font-size:11px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.round{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between;margin-bottom:14px}
+.topic{display:inline-block;font-size:12px;font-weight:600;color:var(--gold);border:1px solid rgba(245,197,66,.35);border-radius:99px;padding:4px 10px;margin-bottom:14px}
+h1{font-family:Archivo;font-weight:900;font-size:40px;line-height:1.05;margin-bottom:12px}
+h2{font-family:Archivo;font-weight:700;font-size:24px;line-height:1.25;margin-bottom:18px}
+p{color:#c9cbd8;line-height:1.55;font-size:15px}
+.timer{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:20px}
+.timer i{display:block;height:100%;background:var(--gold);width:100%;transition:width .1s linear}
+.timer.low i{background:var(--bad)}
+.tnum{font-variant-numeric:tabular-nums}
+input[type=text]{width:100%;font:600 20px Inter;color:var(--ink);background:#0e1120;border:2px solid var(--line);border-radius:12px;padding:14px 16px;outline:none}
+input[type=text]:focus{border-color:var(--gold)}
+.row{display:flex;gap:10px;margin-top:12px}
+button{font:700 15px Inter;border:0;border-radius:12px;padding:14px 18px;cursor:pointer;color:#111;background:var(--gold);flex:1}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.3;cursor:default}
+.kbd{font-size:11px;opacity:.6;margin-left:6px;font-weight:600}
+.stakes{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.stakes.four{grid-template-columns:repeat(4,1fr)}
+.stakes button{padding:18px 0;font-family:Archivo;font-weight:900;font-size:19px}
+.stakes button.used{background:#1d2238;color:#4a5072;text-decoration:line-through}
+.fb{text-align:center;padding:8px 0 4px}
+.fb .big{font-family:Archivo;font-weight:900;font-size:44px;margin-bottom:6px}
+.fb .ok{color:var(--ok)}.fb .bad{color:var(--bad)}
+.fb .ans{font-size:15px;color:var(--mute);margin-bottom:4px}
+.fb .ans b{color:var(--ink)}
+.fb .you{font-size:13px;color:var(--mute);margin-bottom:18px}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dots i{width:10px;height:10px;border-radius:3px;background:var(--line)}
+.dots i.ok{background:var(--ok)}.dots i.bad{background:var(--bad)}.dots i.cur{background:var(--gold)}
+.rules{display:grid;gap:10px;margin:18px 0 22px}
+.rule{display:flex;gap:12px;align-items:flex-start;background:#0e1120;border-radius:12px;padding:12px 14px}
+.rule b{font-family:Archivo;color:var(--gold);font-size:18px;min-width:22px}
+.rule div{font-size:14px;color:#c9cbd8;line-height:1.45}
+.rule strong{color:var(--ink)}
+.total{font-family:Archivo;font-weight:900;font-size:56px;color:var(--gold);line-height:1;margin:6px 0 18px}
+.break{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.break div{background:#0e1120;border-radius:12px;padding:12px;text-align:center;font-size:12px;color:var(--mute)}
+.break b{display:block;font-family:Archivo;font-size:20px;color:var(--ink);margin-top:4px}
+pre{background:#0e1120;border-radius:12px;padding:14px;font:500 14px/1.6 ui-monospace,Menlo,monospace;white-space:pre-wrap;margin-bottom:10px;color:#dfe1ea}
+.lb{margin-top:18px}
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tabs button{flex:0 0 auto;padding:8px 14px;font-size:13px;background:transparent;color:var(--mute);border:1px solid var(--line)}
+.tabs button.on{background:var(--ink);color:#111;border-color:var(--ink)}
+.lbrow{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:15px}
+.lbrow:last-child{border-bottom:0}
+.lbrow .pos{width:26px;font-family:Archivo;font-weight:900;color:var(--mute)}
+.lbrow .nm{flex:1}
+.lbrow .sc{font-family:Archivo;font-weight:900;font-variant-numeric:tabular-nums}
+.lbrow.me .nm{color:var(--gold);font-weight:700}
+.lbrow:nth-child(1) .pos{color:var(--gold)}
+.note{font-size:13px;color:var(--mute);margin-top:10px;line-height:1.5}
+.r3topics{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px}
+.r3topics span{font-size:13px;font-weight:600;border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+.hide{display:none!important}
+@media (max-width:420px){h1{font-size:34px}h2{font-size:21px}.stakes button{font-size:16px;padding:16px 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">DUEL<span>BY VACULIK</span></div>
+    <div class="bank hide" id="bank"><small>Konto</small><span id="bankv" class="tnum">0 €</span></div>
+    <div class="date" id="date"></div>
+  </header>
+  <main id="app"></main>
+  <section class="card lb" id="lb">
+    <div class="round"><span>Rebríček</span><span id="lbstatus"></span></div>
+    <div class="tabs"><button class="on" data-t="day">Dnes</button><button data-t="all">Celkovo</button></div>
+    <div id="lbbody"><p class="note">Načítavam…</p></div>
+  </section>
+</div>
+<script>
+/* ====== NASTAVENIE: sem vlož údaje zo Supabase (Project Settings → API) ====== */
+const SUPABASE_URL = "https://mrdvzrahuzuxketyugmp.supabase.co";   // napr. https://abcdefgh.supabase.co
+const SUPABASE_KEY = "sb_publishable_pxwzo4jz9YHgNpwXVyd7ng_6VoL6J6D";      // anon / publishable key (je verejný, to je v poriadku)
+/* ========================================================================== */
+// [téma, otázka, "odpoveď|alternatíva|..."] — prvá odpoveď sa zobrazuje ako správna
+const Q = {
+e: [
+["SK","Ktorá rieka preteká Bratislavou?","Dunaj"],
+["SK","Ako sa volá najvyšší vrch Slovenska?","Gerlachovský štít|Gerlach|Gerlachovský"],
+["SK","V ktorom roku vznikla samostatná Slovenská republika?","1993",1],
+["SK","Ktoré mesto je metropolou východného Slovenska?","Košice"],
+["SK","Ktorý hrad zapísaný v UNESCO patrí k najväčším hradným komplexom v strednej Európe?","Spišský hrad|Spiš|Spišský"],
+["SK","Aká mena platí na Slovensku od roku 2009?","Euro"],
+["SK","Ako sa volá najslávnejší slovenský zbojník?","Jánošík|Juraj Jánošík"],
+["SK","Aká farba je v strede slovenskej trikolóry?","Modrá"],
+["SK","V ktorom meste sídli Slovenská národná galéria?","Bratislava"],
+["SVET","Aké je hlavné mesto Francúzska?","Paríž|Paris"],
+["SVET","Ako sa volá najväčší oceán na Zemi?","Tichý oceán|Tichý|Pacifik|Pacific"],
+["SVET","Aké je hlavné mesto Talianska?","Rím|Roma|Rome"],
+["SVET","V ktorej krajine stoja pyramídy v Gíze?","Egypt"],
+["SVET","Ktorá je najdlhšia rieka Európy?","Volga"],
+["SVET","Na ktorom kontinente leží Brazília?","Južná Amerika|Amerika"],
+["SVET","Aké je hlavné mesto Japonska?","Tokio|Tokyo"],
+["SVET","Ktorý štát je rozlohou najväčší na svete?","Rusko"],
+["SVET","V ktorom meste stojí Socha slobody?","New York|NYC"],
+["HIST","Kto bol prvým prezidentom Československa?","Masaryk|Tomáš Garrigue Masaryk|T. G. Masaryk"],
+["HIST","V ktorom roku padol Berlínsky múr?","1989",1],
+["HIST","Kto bol prvý človek na Mesiaci?","Armstrong|Neil Armstrong"],
+["HIST","V ktorom roku sa začala 2. svetová vojna?","1939",1],
+["HIST","Ktorý francúzsky cisár prehral bitku pri Waterloo?","Napoleon|Napoleon Bonaparte"],
+["HIST","Ktorá loď sa v roku 1912 potopila po zrážke s ľadovcom?","Titanic"],
+["HIST","Kto sa v roku 1492 doplavil do Ameriky?","Kolumbus|Krištof Kolumbus|Columbus"],
+["HIST","Ako sa nazýva revolúcia z novembra 1989 v Československu?","Nežná revolúcia|nežná|zamatová|zamatová revolúcia"],
+["HIST","Ktorý veľkomoravský knieža pozval na Moravu Cyrila a Metoda?","Rastislav"],
+["SPORT","Koľko hráčov má futbalový tím na ihrisku?","11"],
+["SPORT","V ktorom športe získal Peter Sagan tri tituly majstra sveta?","Cyklistika|cestná cyklistika|bicykel"],
+["SPORT","Ktorá slovenská lyžiarka vyhrala v roku 2021 veľký krištáľový glóbus?","Vlhová|Petra Vlhová"],
+["SPORT","Koľko bodov má v basketbale kôš spoza čiary trojky?","3"],
+["SPORT","V ktorom meste sa konali letné olympijské hry 2024?","Paríž|Paris"],
+["SPORT","Aký šport hrával Zdeno Chára?","Hokej|ľadový hokej"],
+["SPORT","Koľko jamiek má štandardné golfové ihrisko?","18"],
+["SPORT","Ako sa volá slávny tenisový turnaj hraný na tráve v Londýne?","Wimbledon"],
+["SPORT","Koľko minút trvá riadny hrací čas futbalového zápasu?","90"],
+["HUDBA","Koľko strún má klasická gitara?","6"],
+["HUDBA","Kto bol frontmanom skupiny Queen?","Freddie Mercury|Mercury"],
+["HUDBA","Ktorý skladateľ zložil Mesačnú sonátu?","Beethoven|Ludwig van Beethoven"],
+["HUDBA","Z ktorého mesta pochádzali Beatles?","Liverpool"],
+["HUDBA","Koho prezývajú „kráľ popu“?","Michael Jackson|Jackson"],
+["HUDBA","Ako sa volá nástroj s čiernymi a bielymi klávesmi, ktorý stojí v koncertnej sále?","Klavír|piano|krídlo"],
+["HUDBA","Koľko čiar má notová osnova?","5"],
+["HUDBA","Ktorá švédska skupina vyhrala Eurovíziu s piesňou Waterloo?","ABBA"],
+["HUDBA","Ktorý rakúsky skladateľ napísal operu Čarovná flauta?","Mozart|Wolfgang Amadeus Mozart"],
+["FILM","Ako sa volá čarodejník s jazvou v tvare blesku?","Harry Potter|Potter|Harry"],
+["FILM","Kto režíroval film Titanic z roku 1997?","James Cameron|Cameron"],
+["FILM","Ako sa volá zelený zlobor z animovaného filmu z roku 2001?","Shrek"],
+["FILM","V ktorom meste sa nachádza štvrť Hollywood?","Los Angeles|LA"],
+["FILM","Aké meno patrí agentovi 007?","James Bond|Bond"],
+["FILM","V ktorej rozprávke stratí hlavná hrdinka sklenú črievičku?","Popoluška|Cinderella"],
+["FILM","Ako sa volá ocenenie Americkej filmovej akadémie?","Oscar"],
+["FILM","Ako sa volá lev, hlavná postava Leviho kráľa?","Simba"],
+["FILM","Ako sa volá seriál o šiestich kamarátoch z New Yorku (1994–2004)?","Priatelia|Friends"],
+["VEDA","Aký je chemický vzorec vody?","H2O"],
+["VEDA","Ktorá planéta je najbližšie k Slnku?","Merkúr|Merkur|Mercury"],
+["VEDA","Koľko nôh má pavúk?","8"],
+["VEDA","Ktorý plyn rastliny pohlcujú zo vzduchu pri fotosyntéze?","Oxid uhličitý|CO2"],
+["VEDA","Pri koľkých °C vrie voda za normálneho tlaku?","100"],
+["VEDA","Ktorá je najväčšia planéta slnečnej sústavy?","Jupiter"],
+["VEDA","Ktorý je najväčší orgán ľudského tela?","Koža"],
+["VEDA","Ktoré zviera je najväčší živočích na svete?","Plejtvák obrovský|plejtvák|modrá veľryba|veľryba"],
+["VEDA","Koľko planét má slnečná sústava?","8"],
+["JAZYK","Kto napísal Rómea a Júliu?","Shakespeare|William Shakespeare"],
+["JAZYK","Koľko písmen má anglická abeceda?","26"],
+["JAZYK","Kto napísal Hájnikovu ženu?","Hviezdoslav|Pavol Országh Hviezdoslav"],
+["JAZYK","Kto napísal Malého princa?","Saint-Exupéry|Exupéry|Antoine de Saint-Exupéry"],
+["JAZYK","Kto kodifikoval spisovnú slovenčinu v roku 1843?","Štúr|Ľudovít Štúr"],
+["JAZYK","Kto napísal knihy o Harrym Potterovi?","Rowlingová|Rowling|J. K. Rowlingová|J. K. Rowling"],
+["JAZYK","Ako sa volá drevený chlapec, ktorému pri klamstve rastie nos?","Pinocchio|Pinokio"],
+["JAZYK","Ktorý zberateľ vydal Prostonárodné slovenské povesti?","Dobšinský|Pavol Dobšinský"],
+["JAZYK","Akým jazykom sa hovorí v Brazílii?","Portugalčina|portugalsky|portugalský"],
+["JEDLO","Z ktorého ovocia sa robí guacamole?","Avokádo|avocado"],
+["JEDLO","Ako sa volá slovenské národné jedlo s bryndzou?","Bryndzové halušky|halušky"],
+["JEDLO","Z ktorej krajiny pochádza pizza?","Taliansko"],
+["JEDLO","Ako sa volá japonské jedlo z ryže a surovej ryby?","Sushi|suši"],
+["JEDLO","Z čoho sa vyrábajú hranolky?","Zemiaky|zemiak|zemiakov"],
+["JEDLO","Čo je hlavnou surovinou hummusu?","Cícer"],
+["JEDLO","Ktorý nápoj sa vyrába z jačmenného sladu a chmeľu?","Pivo"],
+["JEDLO","Z ktorej krajiny pochádza paella?","Španielsko"],
+["JEDLO","Ktoré korenie z kvetov šafranu je najdrahšie na svete?","Šafran"],
+["TECH","Ktorá firma vyrába iPhone?","Apple"],
+["TECH","Kto založil Microsoft spolu s Paulom Allenom?","Bill Gates|Gates"],
+["TECH","Čo znamená skratka WWW?","World Wide Web"],
+["TECH","Ako sa volá najpoužívanejší internetový vyhľadávač?","Google"],
+["TECH","Kto založil Facebook?","Zuckerberg|Mark Zuckerberg"],
+["TECH","Koľko bitov má jeden bajt?","8"],
+["TECH","Ako sa volá mobilný operačný systém od Googlu?","Android"],
+["TECH","Ktorá automobilka vyrába Model 3 a Model Y?","Tesla"],
+["UMENIE","Kto namaľoval Monu Lisu?","Leonardo da Vinci|da Vinci|Leonardo"],
+["UMENIE","Ktorý maliar si odrezal časť ucha?","Van Gogh|Vincent van Gogh|Gogh"],
+["UMENIE","V ktorom meste je múzeum Louvre?","Paríž|Paris"],
+["UMENIE","Ktorý pop-artový umelec mal rodičov z obce Miková?","Warhol|Andy Warhol"],
+["UMENIE","Ako sa volá maľba na vlhkú omietku?","Freska"],
+["UMENIE","Kto namaľoval Guernicu?","Picasso|Pablo Picasso"],
+["UMENIE","Akú farbu dostaneš zmiešaním modrej a žltej?","Zelená"]
+],
+m: [
+["SK","V ktorom slovenskom meste je jedna z najstarších nepretržite fungujúcich mincovní na svete?","Kremnica"],
+["SK","Na ktorej rieke leží Žilina?","Váh"],
+["SK","Kto bol prvým predsedom vlády samostatnej Slovenskej republiky?","Mečiar|Vladimír Mečiar"],
+["SK","Ako sa volá najväčšie pleso na slovenskej strane Tatier?","Veľké Hincovo pleso|Hincovo pleso|Hincovo"],
+["SK","Ako sa volá ľadová jaskyňa v Slovenskom raji zapísaná v UNESCO?","Dobšinská ľadová jaskyňa|Dobšinská"],
+["SK","Ktorý slovenský vynálezca si v roku 1914 patentoval padák?","Štefan Banič|Banič"],
+["SK","V ktorom roku vstúpilo Slovensko do Európskej únie?","2004",1],
+["SK","Ako sa volá najvyššie položená horská chata na Slovensku (2 250 m)?","Chata pod Rysmi|pod Rysmi|Rysy"],
+["SVET","Aké je hlavné mesto Austrálie?","Canberra"],
+["SVET","Ako sa volá najvyšší vrch Afriky?","Kilimandžáro|Kilimanjaro"],
+["SVET","Aké je hlavné mesto Brazílie?","Brasília|Brazília|Brasilia"],
+["SVET","Ktorá krajina má (aj so zámorskými územiami) najviac časových pásiem?","Francúzsko"],
+["SVET","Ako sa volá prieliv medzi Španielskom a Marokom?","Gibraltársky prieliv|Gibraltár|Gibraltar|Gibraltársky"],
+["SVET","Ktorá rieka preteká najväčším počtom štátov?","Dunaj"],
+["SVET","Aké je hlavné mesto Maroka?","Rabat"],
+["SVET","Ako sa volá najvyšší vrch Álp?","Mont Blanc|Montblanc"],
+["HIST","V ktorom roku bola bitka pri Moháči?","1526",3],
+["HIST","Kto bol prvým rímskym cisárom?","Augustus|Oktavián|Octavianus|Augustus Octavianus"],
+["HIST","V ktorom roku vypukla Veľká francúzska revolúcia?","1789",3],
+["HIST","Kto bol posledným prezidentom Československa?","Václav Havel|Havel"],
+["HIST","V ktorom roku sa odohrala bitka na Bielej hore?","1620",5],
+["HIST","Ktorý panovník zrušil v roku 1781 nevoľníctvo v habsburskej monarchii?","Jozef II.|Jozef|Jozef II"],
+["HIST","V ktorom roku skončila 1. svetová vojna?","1918",1],
+["HIST","Ako sa volal prvý uhorský kráľ?","Štefan|Štefan I.|svätý Štefan"],
+["SPORT","V ktorom roku sa Slovensko stalo majstrom sveta v hokeji?","2002",1],
+["SPORT","Kto strelil víťazný gól Slovenska vo finále MS v hokeji 2002?","Peter Bondra|Bondra"],
+["SPORT","Koľko metrov presne meria maratón?","42195|42 195"],
+["SPORT","Ktorý tenista má najviac grandslamových titulov medzi mužmi?","Djokovič|Novak Djokovič|Djokovic"],
+["SPORT","Koľko hráčov jedného tímu je naraz vo vode vo vodnom póle (aj s brankárom)?","7"],
+["SPORT","Ako sa volajú slovenskí bratia, trojnásobní olympijskí víťazi v C2?","Hochschornerovci|Hochschorner|Hochschornerovi"],
+["SPORT","V ktorom športe získala Anastasia Kuzminová tri olympijské zlatá?","Biatlon"],
+["SPORT","Ktorá krajina vyhrala najviac majstrovstiev sveta vo futbale?","Brazília|Brazilia"],
+["HUDBA","Kto zložil Štyri ročné obdobia?","Vivaldi|Antonio Vivaldi"],
+["HUDBA","Kto zložil symfóniu Z Nového sveta?","Dvořák|Antonín Dvořák|Dvorak"],
+["HUDBA","Koľko symfónií dokončil Beethoven?","9"],
+["HUDBA","Ktorý hudobný nástroj má pedále a 47 strún?","Harfa"],
+["HUDBA","Ktorý rapper sa vlastným menom volá Marshall Mathers?","Eminem"],
+["HUDBA","Kto zložil operu Carmen?","Bizet|Georges Bizet"],
+["HUDBA","Ako sa volal bubeník skupiny The Beatles?","Ringo Starr|Ringo|Starr"],
+["HUDBA","Aký taliansky hudobný termín znamená „veľmi potichu“?","Pianissimo"],
+["FILM","Kto režíroval Pulp Fiction?","Tarantino|Quentin Tarantino"],
+["FILM","V ktorom roku vyšiel prvý film Star Wars?","1977",2],
+["FILM","Ktorý slovenský režisér nakrútil spolu s Elmarom Klosom oscarový Obchod na korze?","Ján Kadár|Kadár"],
+["FILM","Kto hral Forresta Gumpa?","Tom Hanks|Hanks"],
+["FILM","Ako sa volá kontinent, na ktorom sa odohráva väčšina Hry o tróny?","Westeros"],
+["FILM","Kto vymyslel animovanú postavičku Krtka?","Zdeněk Miler|Miler"],
+["FILM","Kto režíroval film Pelíšky?","Jan Hřebejk|Hřebejk|Hrebejk"],
+["FILM","Ako sa volá hotel vo filme Osvietenie (The Shining)?","Overlook"],
+["VEDA","Akú chemickú značku má striebro?","Ag"],
+["VEDA","Kto objavil penicilín?","Fleming|Alexander Fleming"],
+["VEDA","Koľko kilometrov za sekundu približne prejde svetlo? (zaokrúhli na tisíce)","300000|300 000"],
+["VEDA","Koľko chromozómov má bežná ľudská bunka?","46"],
+["VEDA","Ktorý prvok má značku W?","Volfrám|wolfrám|tungsten"],
+["VEDA","Ako sa volá najväčšia tepna ľudského tela?","Aorta|srdcovnica"],
+["VEDA","Ktorá planéta má najviac známych mesiacov?","Saturn"],
+["VEDA","Kto zostavil periodickú tabuľku prvkov?","Mendelejev|Dmitrij Mendelejev"],
+["JAZYK","Kto napísal Zločin a trest?","Dostojevskij|Fiodor Michajlovič Dostojevskij|Dostoevsky"],
+["JAZYK","Kto napísal Veľkého Gatsbyho?","Fitzgerald|F. Scott Fitzgerald|Scott Fitzgerald"],
+["JAZYK","Kto napísal Sto rokov samoty?","García Márquez|Márquez|Gabriel García Márquez"],
+["JAZYK","Kto napísal báseň Marína?","Sládkovič|Andrej Sládkovič"],
+["JAZYK","Kto napísal Rysavú jalovicu?","Kukučín|Martin Kukučín"],
+["JAZYK","Kto napísal román Tri gaštanové kone?","Margita Figuli|Figuli"],
+["JAZYK","Kto napísal Božskú komédiu?","Dante|Dante Alighieri"],
+["JAZYK","Kto napísal novelu Starec a more?","Hemingway|Ernest Hemingway"],
+["JEDLO","Z ktorej krajiny pochádza syr manchego?","Španielsko"],
+["JEDLO","Ako sa volá francúzsky dezert s karamelizovanou cukrovou krustou?","Crème brûlée|creme brulee|krém brulé"],
+["JEDLO","Z akého mlieka sa vyrába pravá slovenská bryndza?","Ovčie|ovčieho|ovčie mlieko"],
+["JEDLO","Ktoré korenie dáva kari jeho žltú farbu?","Kurkuma"],
+["JEDLO","Ktorá krajina je najväčším producentom kávy?","Brazília|Brazilia"],
+["JEDLO","Z akej suroviny sa vyrába japonské saké?","Ryža"],
+["JEDLO","Ako sa volá najznámejšia odroda ryže na rizoto?","Arborio|Carnaroli"],
+["JEDLO","Ako sa volá gruzínsky chlieb plnený syrom?","Chačapuri|khachapuri|hačapuri"],
+["TECH","V ktorom roku Apple predstavil prvý iPhone?","2007",1],
+["TECH","Ktorý programovací jazyk je pomenovaný podľa Monty Pythona?","Python"],
+["TECH","Ako sa volal prvý populárny grafický webový prehliadač z roku 1993?","Mosaic|NCSA Mosaic"],
+["TECH","Ako sa volá slovenská firma známa antivírusom NOD32?","ESET"],
+["TECH","Čo znamená skratka USB?","Universal Serial Bus"],
+["TECH","V ktorom roku bol založený Google?","1998",2],
+["TECH","Kto vytvoril jadro operačného systému Linux?","Linus Torvalds|Torvalds"],
+["TECH","Koľko bitov má adresa IPv4?","32"],
+["UMENIE","Kto namaľoval Výkrik?","Munch|Edvard Munch"],
+["UMENIE","Kto vytvoril sochu Dávida vo Florencii?","Michelangelo|Michelangelo Buonarroti"],
+["UMENIE","V ktorom meste je múzeum Prado?","Madrid"],
+["UMENIE","Ktorý architekt navrhol Sagradu Famíliu?","Gaudí|Antoni Gaudí"],
+["UMENIE","Kto namaľoval obraz s roztekanými hodinami Pretrvávanie pamäti?","Dalí|Salvador Dalí"],
+["UMENIE","Ku ktorému umeleckému smeru patrí Claude Monet?","Impresionizmus"],
+["UMENIE","Kto namaľoval Dievča s perlovou náušnicou?","Vermeer|Johannes Vermeer"],
+["UMENIE","Kto namaľoval obraz Bozk so zlatým pozadím?","Klimt|Gustav Klimt"]
+],
+h: [
+["SK","V ktorom roku je Bratislava prvýkrát písomne spomenutá (Brezalauspurc)?","907",10],
+["SK","Ktorá obec je najnižšie položeným miestom Slovenska?","Klin nad Bodrogom|Klin"],
+["SK","Koľko samosprávnych krajov má Slovensko?","8"],
+["SK","Kto napísal text slovenskej hymny?","Janko Matúška|Matúška"],
+["SK","V ktorej obci sa narodil astronóm Maximilián Hell?","Štiavnické Bane"],
+["SK","Ako sa volá najvyšší vodopád Slovenska?","Kmeťov vodopád|Kmeťov"],
+["SVET","Aké je hlavné mesto Kazachstanu?","Astana"],
+["SVET","Aké je hlavné mesto Mongolska?","Ulanbátar|Ulaanbaatar|Ulanbator"],
+["SVET","Ako sa volá najhlbšie jazero sveta?","Bajkal"],
+["SVET","Aké je hlavné mesto Nového Zélandu?","Wellington"],
+["SVET","Ktorá rieka preteká Bagdadom?","Tigris"],
+["SVET","Ako sa volá najvyšší vodopád sveta?","Angelov vodopád|Angel|Salto Ángel|Angelov"],
+["HIST","V ktorom roku bola vydaná Magna Charta?","1215",10],
+["HIST","Ako sa volal posledný ruský cár?","Mikuláš II.|Mikuláš|Nikolaj|Nikolaj II."],
+["HIST","V ktorom roku bol v Sarajeve zavraždený František Ferdinand d'Este?","1914",1],
+["HIST","Ktorý uhorský kráľ zahynul po bitke pri Moháči?","Ľudovít II.|Ľudovít"],
+["HIST","V ktorom roku bolo prijaté Memorandum národa slovenského?","1861",3],
+["HIST","Ako sa volal najslávnejší vládca Hunov?","Attila"],
+["SPORT","V ktorom meste sa konali prvé novodobé olympijské hry?","Atény|Athens"],
+["SPORT","Kto získal prvú olympijskú zlatú medailu pre samostatné Slovensko?","Michal Martikán|Martikán"],
+["SPORT","Koľko metrov meria olympijský bazén?","50"],
+["SPORT","Ktorý hokejista strelil najviac gólov v histórii NHL?","Ovečkin|Alexander Ovečkin|Ovechkin"],
+["SPORT","Podľa koho sa volá technika skoku do výšky chrbtom k latke?","Fosbury|Dick Fosbury|flop"],
+["SPORT","Koľko hráčov má tím rugby union na ihrisku?","15"],
+["HUDBA","Kto zložil operu Rusalka?","Dvořák|Antonín Dvořák|Dvorak"],
+["HUDBA","Koľko kláves má štandardný klavír?","88"],
+["HUDBA","Kto zložil Bolero?","Ravel|Maurice Ravel"],
+["HUDBA","Z ktorej krajiny pochádza skupina Sigur Rós?","Island"],
+["HUDBA","Kto zložil operu Krútňava?","Eugen Suchoň|Suchoň"],
+["HUDBA","Aké bolo rodné priezvisko Freddieho Mercuryho?","Bulsara"],
+["FILM","Kto režíroval film Psycho (1960)?","Hitchcock|Alfred Hitchcock"],
+["FILM","Kto režíroval oscarový film Parazit (2019)?","Bong Joon-ho|Bong|Bong Joon Ho"],
+["FILM","Ktorý film získal v roku 2004 jedenásť Oscarov?","Návrat kráľa|Pán prsteňov|Return of the King|Pán prsteňov: Návrat kráľa"],
+["FILM","V ktorom meste sa udeľuje Zlatá palma?","Cannes"],
+["FILM","Ako sa volá film Juraja Jakubiska z roku 2008 o krvavej grófke?","Bathory|Báthory"],
+["FILM","Kto zložil hudbu k Star Wars?","John Williams|Williams"],
+["VEDA","Akú chemickú značku má draslík?","K"],
+["VEDA","Koľko kostí má dospelý človek?","206"],
+["VEDA","Kto objavil zákony dedičnosti pokusmi s hrachom?","Mendel|Gregor Johann Mendel|Gregor Mendel"],
+["VEDA","Aké protónové číslo má uhlík?","6"],
+["VEDA","Ako sa volá najdlhšia kosť ľudského tela?","Stehenná kosť|stehenná|stehnová kosť|femur"],
+["VEDA","Ako sa volá najväčší mesiac slnečnej sústavy?","Ganymedes|Ganymed"],
+["JAZYK","Kto napísal román Proces?","Kafka|Franz Kafka"],
+["JAZYK","Kto napísal Krvavé sonety?","Hviezdoslav|Pavol Országh Hviezdoslav"],
+["JAZYK","Kto napísal román Živý bič?","Milo Urban|Urban"],
+["JAZYK","Kto napísal Majstra a Margarétu?","Bulgakov|Michail Bulgakov"],
+["JAZYK","Kto je autorom Odysey?","Homér|Homer"],
+["JAZYK","Kto napísal satiru Kocúrkovo?","Ján Chalupka|Chalupka"],
+["JEDLO","Z ktorej krajiny pochádza polievka pho?","Vietnam"],
+["JEDLO","Ako sa volá japonský práškový zelený čaj?","Matcha|matča"],
+["JEDLO","Z ktorej rastliny sa vyrába tequila?","Agáve|modrá agáve|agave"],
+["JEDLO","Ako sa volá údený ovčí syr vajcovitého tvaru so zdobením?","Oštiepok|ostiepok"],
+["JEDLO","Obyvatelia ktorej krajiny vypijú najviac kávy na osobu?","Fínsko"],
+["JEDLO","Ako sa volá kórejská fermentovaná kapusta?","Kimči|kimchi"],
+["TECH","Kto je považovaný za tvorcu World Wide Webu?","Tim Berners-Lee|Berners-Lee|Berners Lee"],
+["TECH","V ktorom roku poslal Ray Tomlinson prvý e-mail?","1971",2],
+["TECH","Ako sa volá žena považovaná za prvú programátorku?","Ada Lovelace|Lovelace|Ada"],
+["TECH","Čo znamená písmeno G v označení 5G?","Generácia|generation|generácie"],
+["TECH","Ktorý slovenský kňaz-vynálezca sa preslávil bezdrôtovou telegrafiou?","Jozef Murgaš|Murgaš"],
+["TECH","Ako sa volá spoluzakladateľ Apple, Steve, ktorý nebol Jobs?","Wozniak|Steve Wozniak"],
+["UMENIE","Kto namaľoval Zrodenie Venuše?","Botticelli|Sandro Botticelli"],
+["UMENIE","Kto vytvoril sochu Mysliteľ?","Rodin|Auguste Rodin"],
+["UMENIE","Kto namaľoval Nočnú hliadku?","Rembrandt|Rembrandt van Rijn"],
+["UMENIE","Ktorý architekt navrhol s Vladom Milunićom Tančiaci dom v Prahe?","Frank Gehry|Gehry"],
+["UMENIE","Ktorý umelecký smer založil André Breton?","Surrealizmus"],
+["UMENIE","Ako sa volá japonské umenie skladania papiera?","Origami"]
+]
+};
+const TOPICS = {SK:"Slovensko",SVET:"Svet a geografia",HIST:"História",SPORT:"Šport",HUDBA:"Hudba",FILM:"Film a seriály",VEDA:"Veda a príroda",JAZYK:"Jazyk a literatúra",JEDLO:"Jedlo a nápoje",TECH:"Technológie",UMENIE:"Umenie a dizajn"};
+
+
+// Čistá logika: denný výber otázok a porovnávanie odpovedí
+const EPOCH = Date.UTC(2026, 10, 6); // 6. 11. 2026 = deň 0
+
+function todayStr(d) {
+  try {
+    return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Bratislava", year: "numeric", month: "2-digit", day: "2-digit" }).format(d || new Date());
+  } catch (e) {
+    const x = d || new Date();
+    return x.getFullYear() + "-" + String(x.getMonth() + 1).padStart(2, "0") + "-" + String(x.getDate()).padStart(2, "0");
+  }
+}
+function dayIndex(ds) {
+  const [y, m, d] = ds.split("-").map(Number);
+  return Math.max(0, Math.round((Date.UTC(y, m - 1, d) - EPOCH) / 86400000));
+}
+function rng(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function shuffled(arr, seed) {
+  const a = arr.slice(), r = rng(seed);
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+// Prejde dni 0..d a vždy zoberie ďalšie otázky z premiešanej fronty; opakovanie až po vyčerpaní banky
+function pickForDay(pool, perDay, distinctTopics, seed, d) {
+  let cycle = 0, queue = shuffled(pool, seed), picks = [];
+  for (let day = 0; day <= d; day++) {
+    picks = [];
+    let i = 0;
+    while (picks.length < perDay) {
+      if (i >= queue.length) { cycle++; queue = queue.concat(shuffled(pool, seed + cycle * 7919)); }
+      const c = queue[i];
+      if (!picks.includes(c) && (!distinctTopics || !picks.some(p => p[0] === c[0]))) { picks.push(c); queue.splice(i, 1); i = 0; }
+      else i++;
+    }
+  }
+  return picks;
+}
+function dailySet(Q, ds) {
+  const d = dayIndex(ds);
+  return { r1: pickForDay(Q.e, 6, false, 1001, d), r2: pickForDay(Q.m, 5, true, 2002, d), r3: pickForDay(Q.h, 4, true, 3003, d) };
+}
+
+function norm(s) {
+  return String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
+}
+function lev(a, b) {
+  if (a === b) return 0;
+  const m = a.length, n = b.length; if (!m) return n; if (!n) return m;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) {
+    const cur = [i];
+    for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[n];
+}
+function tol(len) { return len <= 3 ? 0 : len <= 6 ? 1 : 2; }
+function isCorrect(input, answers, yearTol) {
+  const raw = norm(input);
+  if (!raw) return false;
+  const alts = answers.split("|").map(norm).filter(Boolean);
+  // číselné odpovede: presná zhoda číslic
+  if (alts.every(a => /^[0-9 ]+$/.test(a))) {
+    const digits = raw.replace(/[^0-9]/g, "");
+    if (yearTol && digits) return alts.some(a => Math.abs(+a.replace(/ /g, "") - +digits) <= yearTol);
+    return alts.some(a => a.replace(/ /g, "") === digits);
+  }
+  const words = raw.split(" ");
+  const cands = new Set([raw, raw.replace(/ /g, ""), words[words.length - 1]]);
+  for (const a of alts) {
+    const aj = a.replace(/ /g, "");
+    for (const c of cands) {
+      if (c === a || c === aj) return true;
+      if (c.length >= 3 && lev(c, a) <= tol(a.length)) return true;
+      if (c.length >= 3 && lev(c, aj) <= tol(aj.length)) return true;
+    }
+  }
+  return false;
+}
+
+function tolText(t) { return "Tolerancia ±" + t + " " + (t === 1 ? "rok" : t < 5 ? "roky" : "rokov"); }
+
+
+(function(){
+"use strict";
+const R1_TIME = 45000, R2_TIME = 10000, R3_TIME = 12000, R1_PTS = 20, R1_BONUS = 50;
+const R2_STAKES = [20,40,60,80,100], R3_STAKES = [50,100,200,350];
+const TODAY = todayStr();
+const SET = dailySet(Q, TODAY);
+const KEY = "duel2_" + TODAY;
+let NAME = (() => { try { return localStorage.getItem("duel_name") || ""; } catch (e) { return ""; } })();
+const $ = id => document.getElementById(id);
+const app = $("app");
+const fmtDate = ds => { const [y,m,d] = ds.split("-"); return (+d) + ". " + (+m) + ". " + y; };
+$("date").textContent = fmtDate(TODAY);
+const eur = n => (n < 0 ? "−" : "") + Math.abs(n) + " €";
+const sgn = n => (n > 0 ? "+" : n < 0 ? "−" : "±") + Math.abs(n);
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY, JSON.stringify(S))}catch(e){}}
+
+// stav hry
+let S = load() || { status: "new", r1: [], r2: [], r3: [], score: 0 };
+let phase = "", timer = null, fbAt = 0, onEnter = null, remoteDone = null;
+
+function setBank(){ $("bankv").textContent = eur(S.score); }
+function showBank(on){ $("bank").classList.toggle("hide", !on); $("date").classList.toggle("hide", on); }
+function stopTimer(){ if (timer) { clearInterval(timer); timer = null; } }
+// odpočet; pause/resume pre kolo 1, kde čas beží pre celé kolo
+function runTimer(ms, bar, label, onEnd){
+  stopTimer();
+  const end = Date.now() + ms;
+  const tick = () => {
+    const left = Math.max(0, end - Date.now());
+    if (bar) { bar.firstElementChild.style.width = (left / ms0 * 100) + "%"; bar.classList.toggle("low", left < 3000); }
+    if (label) label.textContent = Math.ceil(left / 1000) + " s";
+    if (left <= 0) { stopTimer(); onEnd(); }
+    return left;
+  };
+  const ms0 = runTimer.total || ms; runTimer.total = 0;
+  tick(); timer = setInterval(tick, 100);
+  return () => Math.max(0, end - Date.now());
+}
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && onEnter && (phase === "fb" || phase === "screen")) {
+    e.preventDefault();
+    if (Date.now() - fbAt < 350) return;
+    const f = onEnter; onEnter = null; fbAt = Date.now(); f(); return;
+  }
+  if (phase === "stake" && /^[1-5]$/.test(e.key)) { const b = document.querySelector('.stakes button[data-i="' + (+e.key - 1) + '"]'); if (b && !b.disabled) b.click(); }
+});
+
+function screen(html, btnLabel, next){
+  stopTimer(); phase = "screen"; fbAt = Date.now();
+  app.innerHTML = '<div class="card">' + html + (btnLabel ? '<div class="row"><button id="go">' + btnLabel + '<span class="kbd">↵</span></button></div>' : "") + "</div>";
+  if (btnLabel) { onEnter = next; $("go").onclick = () => { onEnter = null; next(); }; }
+}
+function feedback(ok, q, given, delta, next){
+  phase = "fb"; fbAt = Date.now();
+  const ans = q[2].split("|")[0];
+  const big = delta === null ? (ok ? "Správne" : "Nesprávne") : (ok ? "+" + delta + " €" : "−" + delta + " €");
+  const card = app.querySelector(".card");
+  const body = card.querySelector(".qbody");
+  body.innerHTML = '<div class="fb"><div class="big ' + (ok ? "ok" : "bad") + '">' + big + '</div>' +
+    '<div class="ans">Správna odpoveď: <b>' + esc(ans) + '</b>' + (q[3] ? ' <span style="font-size:12px">(±' + q[3] + ')</span>' : '') + '</div>' +
+    '<div class="you">' + (given ? "Tvoja odpoveď: " + esc(given) : "Bez odpovede") + '</div>' +
+    '<div class="row"><button id="nx">Ďalej<span class="kbd">↵</span></button></div></div>';
+  onEnter = next;
+  $("nx").onclick = () => { onEnter = null; next(); };
+}
+function qCard(roundLabel, rightLabel, q, extra){
+  app.innerHTML = '<div class="card"><div class="round"><span>' + roundLabel + '</span><span id="tl" class="tnum">' + rightLabel + '</span></div>' +
+    '<div class="timer" id="tb"><i></i></div>' + (extra || "") +
+    '<span class="topic">' + esc(TOPICS[q[0]]) + '</span><h2>' + esc(q[1]) + '</h2>' + (q[3] ? '<p class="note" style="margin:-8px 0 14px">' + tolText(q[3]) + '</p>' : '') +
+    '<div class="qbody"><form id="f" autocomplete="off"><input type="text" id="in" placeholder="Napíš odpoveď…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="send">' +
+    '<div class="row"><button type="submit">Odoslať<span class="kbd">↵</span></button></div></form></div></div>';
+  const inp = $("in"); inp.focus();
+  return inp;
+}
+
+// ---------- ÚVOD ----------
+function intro(){
+  showBank(false);
+  if (S.status === "done") return results();
+  if (S.status === "playing") { S.status = "done"; S.interrupted = true; save(); return results(); }
+  if (!NAME) return askName();
+  screen(
+    '<div class="round"><span>Denná hra</span><span>' + fmtDate(TODAY) + '</span></div>' +
+    '<h1>Dnešný duel</h1><p class="note" style="margin:-4px 0 12px">Hráš ako <b style="color:var(--ink)" id="nm"></b> · <a href="#" id="chn" style="color:var(--gold)">zmeniť</a></p><p>15 otázok, 3 kolá, max. 3 minúty. Všetci hráte dnes rovnaké otázky. Hrať sa dá raz za deň.</p>' +
+    '<div class="rules">' +
+    '<div class="rule"><b>1</b><div><strong>Rozcvička</strong> – 6 otázok, 45 s na celé kolo. Za správnu +20 €, za 6/6 bonus +50 €.</div></div>' +
+    '<div class="rule"><b>2</b><div><strong>Témy</strong> – 5 otázok. Najprv vidíš tému a vsadíš 20, 40, 60, 80 alebo 100 €. Na odpoveď 10 s. Zle = mínus.</div></div>' +
+    '<div class="rule"><b>3</b><div><strong>Finále</strong> – 4 ťažké otázky, stávky 50 / 100 / 200 / 350 €. Na odpoveď 12 s.</div></div>' +
+    '</div><p class="note">Odpoveď píšeš. Diakritika a veľké písmená nevadia, malý preklep prejde. Po každej otázke pokračuješ Enterom alebo tlačidlom – čas medzitým stojí.</p>',
+    "Začať hru", startR1);
+  $("nm").textContent = NAME;
+  $("chn").onclick = e => { e.preventDefault(); askName(); };
+  if (remoteDone) { S = remoteDone; save(); results(); }
+}
+
+function askName(){
+  stopTimer(); phase = "name"; onEnter = null;
+  app.innerHTML = '<div class="card"><div class="round"><span>Vitaj v duele</span></div><h1>Ako sa voláš?</h1><p style="margin-bottom:16px">Meno sa zobrazí v rebríčku a vo výsledku.</p>' +
+    '<form id="nf" autocomplete="off"><input type="text" id="nin" maxlength="24" placeholder="Tvoje meno" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="go">' +
+    '<div class="row"><button type="submit">Pokračovať<span class="kbd">↵</span></button></div></form></div>';
+  const inp = $("nin"); inp.value = NAME; inp.focus();
+  $("nf").onsubmit = e => {
+    e.preventDefault();
+    const v = inp.value.replace(/\s+/g, " ").trim().slice(0, 24);
+    if (!v) { inp.focus(); return; }
+    NAME = v; try { localStorage.setItem("duel_name", v); } catch (er) {}
+    fbAt = Date.now(); intro();
+  };
+}
+
+// ---------- KOLO 1 ----------
+let r1i = 0, r1left = R1_TIME;
+function startR1(){
+  S = { status: "playing", r1: [], r2: [], r3: [], score: 0 }; save();
+  showBank(true); setBank(); r1i = 0; r1left = R1_TIME;
+  r1Question();
+}
+function dots(){ return '<div class="dots">' + SET.r1.map((_, i) => '<i class="' + (S.r1[i] ? (S.r1[i].ok ? "ok" : "bad") : i === r1i ? "cur" : "") + '"></i>').join("") + "</div>"; }
+function r1Question(){
+  if (r1i >= SET.r1.length || r1left <= 0) return endR1();
+  phase = "q";
+  const q = SET.r1[r1i];
+  const inp = qCard("1. kolo · " + (r1i + 1) + "/6", "", q, "");
+  app.querySelector(".round span").insertAdjacentHTML("beforeend", dots());
+  runTimer.total = R1_TIME;
+  const left = runTimer(r1left, $("tb"), $("tl"), () => { r1left = 0; answerR1(inp.value, true); });
+  $("f").onsubmit = e => { e.preventDefault(); if (phase !== "q") return; r1left = left(); stopTimer(); answerR1(inp.value, false); };
+}
+function answerR1(val, timeout){
+  if (phase !== "q") return; phase = "x";
+  const q = SET.r1[r1i], ok = timeout ? false : isCorrect(val, q[2], q[3]);
+  S.r1.push({ ok, a: val.slice(0, 60), skip: timeout || !val.trim() }); if (ok) S.score += R1_PTS; setBank(); save();
+  r1i++;
+  feedback(ok, q, val.trim(), ok ? R1_PTS : null, () => {
+    if (timeout || r1left <= 0) return endR1();
+    r1Question();
+  });
+  if (!ok) { app.querySelector(".big").textContent = "Nesprávne"; }
+  if (timeout) app.querySelector(".fb").insertAdjacentHTML("afterbegin", '<p class="note" style="margin:0 0 10px">Čas na 1. kolo vypršal.</p>');
+}
+function endR1(){
+  const good = S.r1.filter(x => x.ok).length;
+  while (S.r1.length < SET.r1.length) S.r1.push({ ok: false, a: "", skip: true });
+  let bonus = "";
+  if (good === 6 && !S.r1bonus) { S.r1bonus = true; S.score += R1_BONUS; bonus = '<p style="color:var(--ok);font-weight:700;margin-top:6px">Bonus za 6/6: +50 €</p>'; }
+  save(); setBank();
+  screen('<div class="round"><span>1. kolo hotové</span></div><h1>' + good + ' / 6</h1><p>Na konte máš <b style="color:var(--gold)">' + eur(S.score) + '</b>.</p>' + bonus +
+    '<div class="rules"><div class="rule"><b>2</b><div><strong>Témy</strong> – uvidíš tému a vyberieš stávku 20 / 40 / 60 / 80 / 100 €. Potom máš 10 s na odpoveď. Zle = mínus.</div></div></div>',
+    "Začať 2. kolo", () => stakeRound(2));
+}
+
+// ---------- KOLO 2 a 3 ----------
+let ri = 0;
+function stakeRound(n){ ri = 0; if (n === 3) return r3Intro(); stakePick(n); }
+function r3Intro(){
+  screen('<div class="round"><span>2. kolo hotové</span></div><h1>Finále</h1><p>Na konte máš <b style="color:var(--gold)">' + eur(S.score) + '</b>. Témy finále:</p>' +
+    '<div class="r3topics">' + SET.r3.map(q => "<span>" + esc(TOPICS[q[0]]) + "</span>").join("") + '</div>' +
+    '<p class="note">Stávky 50 / 100 / 200 / 350 €, na odpoveď 12 s.</p>', "Začať finále", () => stakePick(3));
+}
+function stakePick(n){
+  const set = n === 2 ? SET.r2 : SET.r3, stakes = n === 2 ? R2_STAKES : R3_STAKES, rec = n === 2 ? S.r2 : S.r3;
+  if (ri >= set.length) return n === 2 ? stakeRound(3) : finish();
+  const q = set[ri];
+  phase = "stake";
+  app.innerHTML = '<div class="card"><div class="round"><span>' + (n === 2 ? "2. kolo" : "Finále") + " · " + (ri + 1) + "/" + set.length + '</span></div><span class="topic">' + esc(TOPICS[q[0]]) + '</span><h2>Za koľko ideš?</h2>' +
+    '<div class="stakes' + (stakes.length === 4 ? " four" : "") + '">' + stakes.map((s, i) => '<button data-i="' + i + '" data-s="' + s + '">' + s + "</button>").join("") + "</div>" +
+    '<p class="note">Klikni alebo stlač 1 – ' + stakes.length + '. Čas na odpoveď sa spustí až po výbere.</p></div>';
+  const choose = s => { if (phase !== "stake") return; phase = "x"; askStaked(n, q, s); };
+  app.querySelectorAll(".stakes button").forEach(b => b.onclick = () => choose(+b.dataset.s));
+}
+function askStaked(n, q, stake){
+  phase = "q";
+  const inp = qCard((n === 2 ? "2. kolo" : "Finále") + " · stávka " + stake + " €", "", q, "");
+  const done = (timeout) => {
+    if (phase !== "q") return; phase = "x"; stopTimer();
+    const val = inp.value, ok = timeout ? false : isCorrect(val, q[2], q[3]);
+    (n === 2 ? S.r2 : S.r3).push({ ok, stake, a: val.slice(0, 60) });
+    S.score += ok ? stake : -stake; setBank(); save();
+    ri++;
+    feedback(ok, q, val.trim(), stake, () => stakePick(n));
+    if (timeout) app.querySelector(".fb").insertAdjacentHTML("afterbegin", '<p class="note" style="margin:0 0 10px">Čas vypršal.</p>');
+  };
+  runTimer(n === 2 ? R2_TIME : R3_TIME, $("tb"), $("tl"), () => done(true));
+  $("f").onsubmit = e => { e.preventDefault(); done(false); };
+}
+
+// ---------- VÝSLEDOK ----------
+function shareText(){
+  const r1 = S.r1.map(x => x.ok ? "🟩" : x.skip ? "⬜" : "🟥").join("");
+  const r2 = S.r2.map(x => sgn(x.ok ? x.stake : -x.stake)).join(" ");
+  const r3 = S.r3.map(x => sgn(x.ok ? x.stake : -x.stake)).join(" ");
+  return "DUEL BY VACULIK · " + fmtDate(TODAY).replace(/ \d{4}$/, "") + (NAME ? "\n👤 " + NAME : "") + "\n💰 " + eur(S.score) + "\n1️⃣ " + r1 + (S.r1bonus ? " +50" : "") + "\n2️⃣ " + (r2 || "–") + "\n3️⃣ " + (r3 || "–");
+}
+function finish(){ S.status = "done"; save(); submitScore(); results(); }
+function results(){
+  stopTimer(); phase = "done"; showBank(false); onEnter = null;
+  const r1 = S.r1.filter(x => x.ok).length * R1_PTS + (S.r1bonus ? R1_BONUS : 0);
+  const r2 = S.r2.reduce((a, x) => a + (x.ok ? x.stake : -x.stake), 0);
+  const r3 = S.r3.reduce((a, x) => a + (x.ok ? x.stake : -x.stake), 0);
+  app.innerHTML = '<div class="card"><div class="round"><span>Dnešný výsledok</span><span>' + fmtDate(TODAY) + '</span></div>' +
+    '<div class="total tnum">' + eur(S.score) + '</div>' +
+    '<div class="break"><div>1. kolo<b>' + eur(r1) + '</b></div><div>2. kolo<b>' + eur(r2) + '</b></div><div>Finále<b>' + eur(r3) + '</b></div></div>' +
+    (S.interrupted ? '<p class="note" style="margin-bottom:12px">Hra bola prerušená, počíta sa skóre v momente prerušenia.</p>' : "") +
+    '<pre id="share"></pre><div class="row"><button id="cp">Kopírovať výsledok</button></div>' +
+    '<p class="note">Nové otázky budú o polnoci.</p></div>';
+  $("share").textContent = shareText();
+  $("cp").onclick = async () => { try { await navigator.clipboard.writeText(shareText()); $("cp").textContent = "Skopírované ✓"; } catch (e) { const r = document.createRange(); r.selectNodeContents($("share")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $("cp").textContent = "Označené – skopíruj ručne"; } };
+}
+
+// ---------- REBRÍČEK (Supabase) ----------
+let lbRows = [], lbTab = "day", lbOk = false;
+const PID = (() => { try { let p = localStorage.getItem("duel_pid"); if (!p) { p = (crypto.randomUUID ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); })); localStorage.setItem("duel_pid", p); } return p; } catch (e) { return null; } })();
+const SB_ON = /^https:\/\//.test(SUPABASE_URL) && SUPABASE_KEY.length > 20;
+const sbHeaders = { apikey: SUPABASE_KEY, Authorization: "Bearer " + SUPABASE_KEY, "Content-Type": "application/json" };
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => { lbTab = b.dataset.t; document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b)); renderLb(); });
+function lbMsg(t){ $("lbbody").innerHTML = '<p class="note">' + t + "</p>"; }
+async function fetchLb(){
+  if (!SB_ON) { lbMsg("Rebríček ešte nie je nastavený (chýba Supabase URL a kľúč)."); return; }
+  try {
+    const r = await fetch(SUPABASE_URL + "/rest/v1/scores?select=player_id,name,score,day,share&order=day.desc&limit=10000", { headers: sbHeaders });
+    if (!r.ok) throw new Error(r.status);
+    lbRows = await r.json(); lbOk = true;
+    const mine = lbRows.find(x => x.player_id === PID && x.day === TODAY);
+    if (mine && S.status === "new" && phase !== "q" && phase !== "fb" && phase !== "stake") {
+      S = { status: "done", score: mine.score, r1: [], r2: [], r3: [], remote: mine.share || "" }; save();
+      resultsRemote({ score: mine.score, share: mine.share });
+    }
+    renderLb();
+  } catch (e) { lbMsg("Rebríček sa nepodarilo načítať."); }
+}
+function renderLb(){
+  if (!lbOk) return;
+  let rows;
+  if (lbTab === "day") {
+    rows = lbRows.filter(x => x.day === TODAY).map(x => ({ id: x.player_id, name: x.name, v: x.score, sub: "" }));
+  } else {
+    const m = {};
+    lbRows.forEach(x => { const a = m[x.player_id] || (m[x.player_id] = { id: x.player_id, name: x.name, v: 0, n: 0 }); a.v += x.score; a.n++; });
+    rows = Object.values(m).map(a => ({ ...a, sub: a.n + (a.n === 1 ? " hra" : a.n < 5 ? " hry" : " hier") }));
+  }
+  rows.sort((a, b) => b.v - a.v);
+  if (!rows.length) return lbMsg(lbTab === "day" ? "Dnes ešte nikto nehral. Buď prvý." : "Zatiaľ žiadne výsledky.");
+  const box = document.createElement("div");
+  rows.forEach((r, i) => {
+    const el = document.createElement("div"); el.className = "lbrow" + (r.id === PID ? " me" : "");
+    const pos = document.createElement("span"); pos.className = "pos"; pos.textContent = i + 1;
+    const nm = document.createElement("span"); nm.className = "nm"; nm.textContent = (r.name || "Hráč") + (r.id === PID ? " (ty)" : "");
+    if (r.sub) { const s = document.createElement("span"); s.style.cssText = "color:var(--mute);font-size:12px;margin-left:8px"; s.textContent = r.sub; nm.appendChild(s); }
+    const sc = document.createElement("span"); sc.className = "sc"; sc.textContent = eur(r.v);
+    el.append(pos, nm, sc); box.appendChild(el);
+  });
+  $("lbbody").replaceChildren(box);
+}
+async function submitScore(){
+  if (!SB_ON || !PID || S.status !== "done" || S.remote || S.sent) return;
+  try {
+    const r = await fetch(SUPABASE_URL + "/rest/v1/scores", { method: "POST", headers: { ...sbHeaders, Prefer: "return=minimal" },
+      body: JSON.stringify({ day: TODAY, player_id: PID, name: NAME || "Hráč", score: S.score, share: shareText() }) });
+    if (r.ok || r.status === 409) { S.sent = true; save(); }
+    else $("lbstatus").textContent = "výsledok sa neuložil";
+  } catch (e) { $("lbstatus").textContent = "výsledok sa neuložil"; }
+  fetchLb();
+}
+function resultsRemote(d){
+  stopTimer(); phase = "done"; showBank(false); onEnter = null;
+  app.innerHTML = '<div class="card"><div class="round"><span>Dnešný výsledok</span><span>' + fmtDate(TODAY) + '</span></div><div class="total tnum">' + eur(d.score) + '</div><pre id="share"></pre><div class="row"><button id="cp">Kopírovať výsledok</button></div><p class="note">Dnes si už hral. Nové otázky budú o polnoci.</p></div>';
+  $("share").textContent = d.share || "";
+  $("cp").onclick = async () => { try { await navigator.clipboard.writeText(d.share || ""); $("cp").textContent = "Skopírované ✓"; } catch (e) { $("cp").textContent = "Skopíruj ručne"; } };
+}
+
+if (S.status === "done" && S.remote) resultsRemote({ score: S.score, share: S.remote }); else intro();
+fetchLb();
+if (S.status === "done") submitScore();
+setInterval(() => { if (phase === "done" || phase === "screen" || phase === "name") fetchLb(); }, 60000);
+})();
+</script>
+</body>
+</html>
