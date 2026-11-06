@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DUEL BY VACULIK</title>
+<title>DUEL</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -79,7 +79,7 @@ pre{background:#0e1120;border-radius:12px;padding:14px;font:500 14px/1.6 ui-mono
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">DUEL<span>BY VACULIK</span></div>
+    <div class="logo">DUEL</div>
     <div class="bank hide" id="bank"><small>Konto</small><span id="bankv" class="tnum">0 €</span></div>
     <div class="date" id="date"></div>
   </header>
@@ -640,7 +640,7 @@ function shareText(){
   const r1 = S.r1.map(x => x.ok ? "🟩" : x.skip ? "⬜" : "🟥").join("");
   const r2 = S.r2.map(x => sgn(x.ok ? x.stake : -x.stake)).join(" ");
   const r3 = S.r3.map(x => sgn(x.ok ? x.stake : -x.stake)).join(" ");
-  return "DUEL BY VACULIK · " + fmtDate(TODAY).replace(/ \d{4}$/, "") + (NAME ? "\n👤 " + NAME : "") + "\n💰 " + eur(S.score) + "\n1️⃣ " + r1 + (S.r1bonus ? " +50" : "") + "\n2️⃣ " + (r2 || "–") + "\n3️⃣ " + (r3 || "–");
+  return "DUEL · " + fmtDate(TODAY).replace(/ \d{4}$/, "") + (NAME ? "\n👤 " + NAME : "") + "\n💰 " + eur(S.score) + "\n1️⃣ " + r1 + (S.r1bonus ? " +50" : "") + "\n2️⃣ " + (r2 || "–") + "\n3️⃣ " + (r3 || "–");
 }
 function finish(){ S.status = "done"; save(); submitScore(); results(); }
 function results(){
